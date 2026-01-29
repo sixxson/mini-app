@@ -6,11 +6,6 @@ import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import ImageCustoms from "@/components/customUI/ImageCustoms";
 import "./Banner.scss";
 import "swiper/css";
-import { useColumnAutoSwiper } from "@/hooks/swiper/useColumnAutoSwiper";
-
-
-
-
 
 export default function Banner() {
   const slides: ReactNode[] = [];
