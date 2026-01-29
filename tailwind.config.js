@@ -15,7 +15,7 @@ module.exports = {
     enabled: true,
     content: ["./src/**/*.{js,jsx,ts,tsx,vue}"],
   },
-    theme: {
+  theme: {
     aspectRatio: {
       auto: "auto",
       square: "1 / 1",
@@ -301,7 +301,7 @@ module.exports = {
       },
       backgroundImage: ({ theme }) => ({
         "linear-1": `linear-gradient(90deg, #181830 -0.01%, #1D1D38 19.26%, #141228 40.12%, #2C223A 75.47%, #231B33 99.98%)`,
-        "linear": `linear-gradient(180deg, #E9E9E9 0%, #A5A5A5 100%)`,
+        linear: `linear-gradient(180deg, #E9E9E9 0%, #A5A5A5 100%)`,
       }),
       backgroundPosition: {
         "pos-100-0": "100% 0%",
@@ -339,6 +339,25 @@ module.exports = {
       typography: {
         DEFAULT: {
           css: {
+            /* IMG & MEDIA */
+            "img, picture, figure": {
+              maxWidth: "100%",
+            },
+            img: {
+              display: "block", // tránh inline gap
+              height: "auto",
+            },
+            picture: {
+              margin: `${r(15)} 0`,
+            },
+            figure: {
+              margin: `${r(15)} 0`,
+            },
+            figcaption: {
+              margin: `${r(8)} 0`,
+              fontSize: "0.875rem",
+              opacity: 0.8,
+            },
             // "--tw-prose-headings": 'theme("colors.primary.2")',
             "--tw-prose-body": "inherit",
             "h1,h2,h3,h4,h5,h6": {
@@ -347,7 +366,7 @@ module.exports = {
               lineHeight: 1.3,
               color: "theme('colors.primary.1')",
               // "@media (min-width: theme('screens.xl'))": {
-              // 	fontSize: r(20),
+              //   fontSize: r(20),
               // },
             },
             strong: {
@@ -362,10 +381,10 @@ module.exports = {
             },
             fontSize: "inherit",
             lineHeight: "inherit",
-            "*": { margin: `${r(20)} 0` },
+            "*": { margin: `${r(15)} 0` },
             "> *:first-child": { marginTop: 0 },
             "> *:last-child": { marginBottom: 0 },
-            div: { margin: `${r(20)} 0` },
+            div: { margin: `${r(15)} 0` },
             margin: 0,
             maxWidth: "unset",
             blockquote: {
@@ -1077,5 +1096,6 @@ module.exports = {
 
       addUtilities(columnUtilities);
     }),
+    require("@tailwindcss/typography"),
   ],
 };

@@ -15,28 +15,28 @@ function HomePage() {
         backgroundImage: `url(${bg})`,
       }}
     >
-      <Box className="w-full">
-        <Banner/>
+      <Box>
+        <div className="prose">
+          <img src="../../assets/img/1.jpg" alt="Welcome" />
+          <Text.Title className="heading-2 font-bold text-center">
+            Welcome to ZMP
+          </Text.Title>
+          <p>
+            adjalksdjalkdConsequat Lorem cillum incididunt culpa exercitation
+            aliqua do laboris do sit. Veniam reprehenderit quis irure fugiat
+            minim qui. Esse laboris sint fugiat id. Enim cupidatat velit
+            incididunt laboris labore non excepteur eu. Tempor proident ut
+            ullamco consequat. Eiusmod irure eu duis eiusmod sit est sit laborum
+            veniam minim. Qui aute exercitation ad sint esse amet laboris aute.
+            Velit dolore velit fugiat adipisicing excepteur magna. Quis pariatur
+            ipsum occaecat ipsum. Voluptate aliquip nostrud aute pariatur
+            pariatur Lorem veniam nostrud aliquip elit reprehenderit. Amet
+            fugiat do do cillum laborum enim aliquip adipisicing. Officia
+            exercitation et irure cillum labore laborum ea velit velit quis
+            mollit cillum minim occaecat.
+          </p>
+        </div>
       </Box>
-      <Box textAlign="center" className="space-y-1">
-        <Text.Title size="xLarge">Hello world!</Text.Title>
-        <Clock />
-        <Text.Title className="rem:text-[30px] ">
-          asiodaisoduaiosduaod
-        </Text.Title>
-      </Box>
-      <Button
-        variant="primary"
-        suffixIcon={<Icon icon="zi-more-grid" />}
-        onClick={() => {
-          openMiniApp({
-            appId: "1070750904448149704", // ZaUI Components
-          });
-        }}
-      >
-        ZaUI Component Library
-      </Button>
-      <Logo className="fixed bottom-8" />
     </Page>
   );
 }
