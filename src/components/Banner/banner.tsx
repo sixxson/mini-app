@@ -8,6 +8,10 @@ import "./Banner.scss";
 import "swiper/css";
 import { useColumnAutoSwiper } from "@/hooks/swiper/useColumnAutoSwiper";
 
+
+
+
+
 export default function Banner() {
   const slides: ReactNode[] = [];
   for (let i = 0; i < 5; i++) {
