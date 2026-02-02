@@ -1,41 +1,69 @@
-import { openMiniApp } from "zmp-sdk";
-import { Box, Button, Icon, Page, Text } from "zmp-ui";
+import { getUserInfo, openMiniApp } from "zmp-sdk";
+import {
+  Box,
+  Button,
+  Header,
+  Icon,
+  Page,
+  Text,
+} from "zmp-ui";
 
 import Clock from "@/components/clock";
-import Logo from "@/components/logo";
 import bg from "@/static/bg.svg";
-import ImageCustoms from "@/components/customUI/ImageCustoms";
-import Banner from "@/components/Banner/banner";
+import { useEffect, useState } from "react";
+import Products from "@/components/Products";
 
 function HomePage() {
+  const [user, setUser] = useState<any>(null);
+
+  // Lấy thông tin user Zalo
+  useEffect(() => {
+    getUserInfo({
+      success: (res) => {
+        setUser(res.userInfo);
+      },
+      fail: (err) => {
+        console.error("Lỗi lấy user:", err);
+      },
+    });
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    window.location.replace("/login");
+  };
   return (
     <Page
-      className="flex flex-col items-center justify-center space-y-6 bg-cover bg-center bg-no-repeat bg-white dark:bg-black"
+      className="bg-cover bg-center bg-no-repeat bg-white dark:bg-black max-h-screen"
       style={{
         backgroundImage: `url(${bg})`,
       }}
     >
-      <Box>
-        <div className="prose">
-          <img src="../../assets/img/1.jpg" alt="Welcome" />
-          <Text.Title className="heading-2 font-bold text-center">
-            Welcome to ZMP
-          </Text.Title>
-          <p>
-            adjalksdjalkdConsequat Lorem cillum incididunt culpa exercitation
-            aliqua do laboris do sit. Veniam reprehenderit quis irure fugiat
-            minim qui. Esse laboris sint fugiat id. Enim cupidatat velit
-            incididunt laboris labore non excepteur eu. Tempor proident ut
-            ullamco consequat. Eiusmod irure eu duis eiusmod sit est sit laborum
-            veniam minim. Qui aute exercitation ad sint esse amet laboris aute.
-            Velit dolore velit fugiat adipisicing excepteur magna. Quis pariatur
-            ipsum occaecat ipsum. Voluptate aliquip nostrud aute pariatur
-            pariatur Lorem veniam nostrud aliquip elit reprehenderit. Amet
-            fugiat do do cillum laborum enim aliquip adipisicing. Officia
-            exercitation et irure cillum labore laborum ea velit velit quis
-            mollit cillum minim occaecat.
-          </p>
-        </div>
+      <Header className="sticky" title="Trang chủ" />
+      <Box className="">
+        {user && (
+          <div className="mb-4 flex flex-col items-center text-center">
+            <img
+              src={user.avatar}
+              alt="avatar"
+              className="w-16 h-16 rounded-full mb-2"
+            />
+            <p>
+              <b>Tên:</b> {user.name}
+            </p>
+            <p>
+              <b>ID:</b> {user.id}
+            </p>
+            <Button onClick={logout}>Đăng xuất</Button>
+          </div>
+        )}
+      </Box>
+      <Box textAlign="center" className="space-y-1 ">
+        <Text.Title size="xLarge">Hello world!</Text.Title>
+        <Clock />
+      </Box>
+      <Box className="container max-h-screen px-[15px] overflow-x-hidden">
+        <Products />
       </Box>
     </Page>
   );
