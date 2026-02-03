@@ -1,54 +1,13 @@
-import { useEffect, useState } from "react";
-import { Button, Header, Page, Text, useNavigate } from "zmp-ui";
-import { getUserInfo, getAccessToken } from "zmp-sdk/apis";
-import { loginWithZalo, loginMock } from "@/api/auth";
-import { isZaloMiniApp } from "@/utils/isZalo";
+import { useState } from "react";
+import { Button, Header, Page, Text, Input, Box } from "zmp-ui";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const { loading, handleLogin, handleZaloLogin } = useAuth();
 
-  // 👉 Tự động chuyển trang nếu đã có token
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/", { replace: true });
-    }
-  }, [navigate]);
-
-  const handleLogin = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      // ===== DEV MODE =====
-      if (!isZaloMiniApp()) {
-        const data = await loginMock();
-        localStorage.setItem("token", data.token);
-        window.location.replace("/");
-        navigate("/", { replace: true }); // ✅ redirect ngay
-        return;
-      }
-
-      // ===== ZALO MINI APP =====
-      await getUserInfo({ avatarType: "normal" });
-
-      const accessToken = await getAccessToken();
-      if (!accessToken) {
-        throw new Error("Không lấy được accessToken từ Zalo");
-      }
-
-      const data = await loginWithZalo({ accessToken });
-      localStorage.setItem("token", data.token);
-
-      navigate("/", { replace: true }); // ✅ redirect ngay
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Đăng nhập thất bại");
-    } finally {
-      setLoading(false);
-    }
+  const onLogin = () => {
+    handleLogin(username);
   };
 
   return (
@@ -59,13 +18,30 @@ export default function Login() {
         Đăng nhập
       </Text.Title>
 
-      <Text className="mb-6 text-gray-500">Đăng nhập bằng tài khoản Zalo</Text>
+      <Text className="mb-6 text-gray-500">Chọn phương thức đăng nhập</Text>
 
-      <Button fullWidth loading={loading} onClick={handleLogin}>
-        Đăng nhập
+      <Box className="mb-4">
+        <Input 
+          placeholder="Nhập username..." 
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          clearable
+          className="mb-2"
+        />
+        <Button fullWidth loading={loading} onClick={onLogin}>
+          Đăng nhập (Username)
+        </Button>
+      </Box>
+
+      <div className="flex items-center justify-between mb-4">
+        <div className="h-px bg-gray-300 flex-1"></div>
+        <span className="px-2 text-gray-400 text-sm">HOẶC</span>
+        <div className="h-px bg-gray-300 flex-1"></div>
+      </div>
+
+      <Button fullWidth variant="secondary" loading={loading} onClick={handleZaloLogin}>
+         Đăng nhập bằng Zalo
       </Button>
-
-      {error && <Text className="mt-4 text-red-500 text-sm">{error}</Text>}
     </Page>
   );
 }

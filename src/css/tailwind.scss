@@ -16,3 +16,8 @@
   //trả về
   @return clamp(#{$min}, #{$vw}vw + #{$intercept}, #{$max});
 }
+
+
+body{
+  overflow: unset 
+}

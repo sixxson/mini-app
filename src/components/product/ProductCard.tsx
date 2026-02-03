@@ -1,6 +1,8 @@
 import Button from "@/components/common/Button";
 import { Product } from "@/types/product";
 import { useNavigate } from "zmp-ui";
+import { useAtomValue } from "jotai";
+import { tokenState } from "@/state";
 
 interface Props {
   product: Product;
@@ -8,6 +10,7 @@ interface Props {
 
 export default function ProductCard({ product }: Props) {
   const navigate = useNavigate();
+  const token = useAtomValue(tokenState);
 
   const image = product.wc_data?.image;
 
@@ -17,9 +20,12 @@ export default function ProductCard({ product }: Props) {
   const currency = product.wc_data?.currency || "VND";
 
   return (
-    <div className="rounded-xl border p-4 bg-white flex flex-col">
+    <div 
+      className="rounded-xl border p-4 bg-white flex flex-col cursor-pointer active:opacity-70 transition-opacity"
+      onClick={() => navigate(`/product/${product.id}`)}
+    >
       {/* Ảnh sản phẩm */}
-      <div className="aspect-square bg-gray-100 rounded-lg mb-3 overflow-hidden">
+      <div className="aspect-square bg-gray-100 rounded-lg mb-3">
         {image ? (
           <img
             src={image.url}
@@ -75,14 +81,18 @@ export default function ProductCard({ product }: Props) {
 
       {/* Hành động */}
       <div className="mt-auto pt-4 flex gap-2">
-        <Button className="flex-1">Mua ngay</Button>
-
-        <Button
-          variant="outline"
+        <Button 
           className="flex-1"
-          onClick={() => navigate(`/product/${product.id}`)}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!token) {
+              navigate("/login");
+              return;
+            }
+            // Handle buy now logic here
+          }}
         >
-          Chi tiết
+          Mua ngay
         </Button>
       </div>
     </div>

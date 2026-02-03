@@ -1,11 +1,13 @@
-import { getUserInfo, openMiniApp } from "zmp-sdk";
+import { getUserInfo, getAccessToken } from "zmp-sdk/apis";
+import { loginWithZalo } from "@/api/auth";
+import { toast } from "react-toastify";
 import {
   Box,
   Button,
   Header,
-  Icon,
   Page,
   Text,
+  useNavigate,
 } from "zmp-ui";
 
 import Clock from "@/components/clock";
@@ -13,35 +15,33 @@ import bg from "@/static/bg.svg";
 import { useEffect, useState } from "react";
 import Products from "@/components/Products";
 
+import { useAtom } from "jotai";
+import { userState } from "@/state";
+import { useAuth } from "@/hooks/useAuth";
+
 function HomePage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useAtom(userState);
+  const { logout, handleZaloLogin } = useAuth();
+  const navigate = useNavigate();
 
-  // Lấy thông tin user Zalo
+  // Không tự động lấy thông tin Zalo ở đây để tránh ghi đè lên username thủ công khi reload
+  // Chỉ lấy khi người dùng nhấn "Liên kết Zalo" (đã có trong handleZaloLogin của useAuth)
   useEffect(() => {
-    getUserInfo({
-      success: (res) => {
-        setUser(res.userInfo);
-      },
-      fail: (err) => {
-        console.error("Lỗi lấy user:", err);
-      },
-    });
-  }, []);
+    console.log("Current user state:", user);
+  }, [user]);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    window.location.replace("/login");
-  };
   return (
     <Page
-      className="bg-cover bg-center bg-no-repeat bg-white dark:bg-black max-h-screen"
+      className="overflow-x-hidden bg-cover bg-center bg-no-repeat bg-white dark:bg-black max-h-screen"
       style={{
         backgroundImage: `url(${bg})`,
       }}
     >
       <Header className="sticky" title="Trang chủ" />
+
       <Box className="">
-        {user && (
+      
+        {user ? (
           <div className="mb-4 flex flex-col items-center text-center">
             <img
               src={user.avatar}
@@ -56,13 +56,21 @@ function HomePage() {
             </p>
             <Button onClick={logout}>Đăng xuất</Button>
           </div>
+        ) : (
+             <div className="mb-4 flex flex-col items-center text-center gap-2">
+                <Text className="mb-1 text-gray-500">Tiếp cận nhiều tiện ích hơn</Text>
+                <div className="flex gap-2">
+                  <Button onClick={() => navigate("/login")}>Đăng nhập</Button>
+                  <Button variant="secondary" onClick={handleZaloLogin}>Liên kết Zalo</Button>
+                </div>
+             </div>
         )}
       </Box>
-      <Box textAlign="center" className="space-y-1 ">
+      {/* <Box textAlign="center" className="space-y-1 ">
         <Text.Title size="xLarge">Hello world!</Text.Title>
         <Clock />
-      </Box>
-      <Box className="container max-h-screen px-[15px] overflow-x-hidden">
+      </Box> */}
+      <Box className="container max-h-screen">
         <Products />
       </Box>
     </Page>

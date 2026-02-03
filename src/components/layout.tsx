@@ -8,45 +8,34 @@ import {
   Route,
 } from "zmp-ui";
 import { AppProps } from "zmp-ui/app";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Login from "@/pages/Login";
 import HomePage from "@/pages";
-import Products from "./Products";
+import ProductList from "@/pages/ProductList";
+import ProductDetail from "@/pages/ProductDetail";
+import BottomNavigation from "./BottomNavigation";
+
+import { useAtomValue } from "jotai";
+import { tokenState } from "@/state";
 
 const Layout = () => {
-  const [token, setToken] = useState<string | null>(null);
-
-  // Lấy token khi app load
-  useEffect(() => {
-    setToken(localStorage.getItem("token"));
-  }, []);
-
-  // Lắng nghe khi token thay đổi (login / logout)
-  useEffect(() => {
-    const onStorageChange = () => {
-      setToken(localStorage.getItem("token"));
-    };
-
-    window.addEventListener("storage", onStorageChange);
-    return () => window.removeEventListener("storage", onStorageChange);
-  }, []);
+  const token = useAtomValue(tokenState);
 
   return (
     <App theme={getSystemInfo().zaloTheme as AppProps["theme"]}>
         <ZMPRouter>
           <AnimationRoutes>
-            {!token ? (
-              <Route path="*" element={<Login />} />
-            ) : (
-              <>
-                <Route path="*" element={<HomePage />} />
-                <Route path="/" element={<HomePage />} />
-                <Route path="/products" element={<Products />} />
-              </>
-            )}
-            
+            <Route path="/" element={<HomePage />} />
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<HomePage />} />
           </AnimationRoutes>
+          <BottomNavigation />
         </ZMPRouter>
+        <ToastContainer position="bottom-right" />
     </App>
   );
 };
