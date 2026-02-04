@@ -1,14 +1,21 @@
-import { Product } from "@/types/product";
+import { Product } from '@/types/product'
 
 export async function getProducts(): Promise<Product[]> {
-  const res = await fetch(
-    "https://visante.webcanhcam.vn/wp-json/wp/v2/product"
-  );
+    const res = await fetch('https://visante.webcanhcam.vn/wp-json/wp/v2/product')
 
-  if (!res.ok) {
-    throw new Error("Lỗi lấy danh sách product");
-  }
+    if (!res.ok) {
+        throw new Error('Lỗi lấy danh sách product')
+    }
 
-  
-  return res.json();
+    return res.json()
+}
+
+export async function getProductById(id: number): Promise<Product> {
+    const res = await fetch(`https://visante.webcanhcam.vn/wp-json/wp/v2/product/${id}`)
+
+    if (!res.ok) {
+        throw new Error('Lỗi lấy thông tin product')
+    }
+
+    return res.json()
 }
